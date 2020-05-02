@@ -1,5 +1,5 @@
 /**
- * Module      : sha256.mo
+ * Module      : main.mo
  * Description : Unit tests.
  * Copyright   : 2020 DFINITY Stiftung
  * License     : Apache 2.0 with LLVM Exception
