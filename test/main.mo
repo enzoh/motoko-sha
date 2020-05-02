@@ -12,12 +12,12 @@ import SHA256 "../src/sha256";
 
 actor {
 
-  type Test = {
+  private type Test = {
     data : [Word8];
     expect : [Word8];
   };
 
-  let tests = [
+  private let tests = [
     {
       data = [
       ] : [Word8];
@@ -502,13 +502,15 @@ actor {
     },
   ];
 
+  private func eq(a : Word8, b : Word8) : Bool {
+    return a == b;
+  };
+
   public func run() {
     for (test in tests.vals()) {
+      let expect = test.expect;
       let actual = SHA256.sha256(test.data);
-      let success = Array.equals<Word8>(test.expect, actual, func (a, b) {
-        return a == b;
-      });
-      assert(success);
+      assert(Array.equals<Word8>(expect, actual, eq));
     };
   };
 };
