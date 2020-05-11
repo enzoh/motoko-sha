@@ -1,5 +1,5 @@
 /**
- * Module      : main.mo
+ * Module      : Main.mo
  * Description : Unit tests.
  * Copyright   : 2020 DFINITY Stiftung
  * License     : Apache 2.0 with LLVM Exception
@@ -7,8 +7,8 @@
  * Stability   : Stable
  */
 
-import Array "mo:stdlib/array";
-import SHA256 "../src/sha256";
+import Array "mo:base/Array";
+import SHA256 "../src/SHA256";
 
 actor {
 

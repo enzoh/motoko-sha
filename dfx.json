@@ -1,7 +1,7 @@
 {
   "canisters": {
     "test": {
-      "main": "test/main.mo"
+      "main": "test/Main.mo"
     }
   }
 }
