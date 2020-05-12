@@ -1,5 +1,5 @@
 /**
- * Module      : sha256.mo
+ * Module      : SHA256.mo
  * Description : Cryptographic hash function.
  * Copyright   : 2020 DFINITY Stiftung
  * License     : Apache 2.0 with LLVM Exception
@@ -7,8 +7,8 @@
  * Stability   : Stable
  */
 
-import Array "mo:stdlib/array";
-import Iter "mo:stdlib/iter";
+import Array "mo:base/Array";
+import Iter "mo:base/Iter";
 import Prim "mo:prim";
 
 module {
