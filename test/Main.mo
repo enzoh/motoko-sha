@@ -510,7 +510,7 @@ actor {
     for (test in tests.vals()) {
       let expect = test.expect;
       let actual = SHA256.sha256(test.data);
-      assert(Array.equals<Word8>(expect, actual, eq));
+      assert(Array.equal<Word8>(expect, actual, eq));
     };
   };
 };
