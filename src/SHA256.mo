@@ -63,9 +63,9 @@ module {
 
     public func write(data : [Word8]) {
       var p = data;
-      len += Prim.natToWord64(p.len());
+      len += Prim.natToWord64(p.size());
       if (nx > 0) {
-        let n = min(p.len(), 64 - nx);
+        let n = min(p.size(), 64 - nx);
         for (i in Iter.range(0, n - 1)) {
           x[nx + i] := p[i];
         };
@@ -75,25 +75,25 @@ module {
           block(buf);
           nx := 0;
         };
-        p := Array.tabulate<Word8>(p.len() - n, func (i) {
+        p := Array.tabulate<Word8>(p.size() - n, func (i) {
           return p[n + i];
         });
       };
-      if (p.len() >= 64) {
-        let n = Prim.word64ToNat(Prim.natToWord64(p.len()) & (^ 63));
+      if (p.size() >= 64) {
+        let n = Prim.word64ToNat(Prim.natToWord64(p.size()) & (^ 63));
         let buf = Array.tabulate<Word8>(n, func (i) {
           return p[i];
         });
         block(buf);
-        p := Array.tabulate<Word8>(p.len() - n, func (i) {
+        p := Array.tabulate<Word8>(p.size() - n, func (i) {
           return p[n + i];
         });
       };
-      if (p.len() > 0) {
-        for (i in Iter.range(0, p.len() - 1)) {
+      if (p.size() > 0) {
+        for (i in Iter.range(0, p.size() - 1)) {
           x[i] := p[i];
         };
-        nx := p.len();
+        nx := p.size();
       };
     };
 
@@ -132,7 +132,7 @@ module {
     private func block(data : [Word8]) {
       var p = data;
       var w = Array.init<Word32>(64, 0);
-      while (p.len() >= 64) {
+      while (p.size() >= 64) {
         var j = 0;
         for (i in Iter.range(0, 15)) {
           j := i * 4;
@@ -185,7 +185,7 @@ module {
         s[5] += f;
         s[6] += g;
         s[7] += h;
-        p := Array.tabulate<Word8>(p.len() - 64, func (i) {
+        p := Array.tabulate<Word8>(p.size() - 64, func (i) {
           return p[i + 64];
         });
       };
