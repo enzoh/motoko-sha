@@ -1,6 +1,6 @@
 ## The SHA Package
 
-[![Build Status](https://travis-ci.org/enzoh/motoko-sha.svg?branch=master)](https://travis-ci.org/enzoh/motoko-sha?branch=master)
+![build](https://github.com/matthewhammer/motoko-sha/workflows/build/badge.svg)
 
 ### Overview
 
