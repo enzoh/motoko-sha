@@ -1,6 +1,6 @@
 ## The SHA Package
 
-![build](https://github.com/matthewhammer/motoko-sha/workflows/build/badge.svg)
+![build](https://github.com/enzoh/motoko-sha/workflows/build/badge.svg)
 
 ### Overview
 
