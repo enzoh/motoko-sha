@@ -3,5 +3,16 @@
     "test": {
       "main": "test/Main.mo"
     }
-  }
+  },
+  "networks": {
+    "tungsten": {
+      "providers": [
+        "https://gw.dfinity.network"
+      ]
+    },
+    "local": {
+      "bind": "127.0.0.1:8000"
+    }
+  },
+  "dfx": "0.5.10"
 }
