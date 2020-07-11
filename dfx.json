@@ -1,12 +1,7 @@
 {
   "canisters": {
-    "Main": {
-       "main":"test/Main.mo"
-     }
- },
- "defaults": {
-    "build": {
-       "output": "canisters/"
-      }
-   }
+    "test": {
+      "main": "test/Main.mo"
+    }
+  }
 }
