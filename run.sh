@@ -13,5 +13,5 @@ echo
 echo == Test.
 echo
 
-dfx canister install --all
+dfx canister install --all --mode=reinstall
 dfx canister call test run '()'

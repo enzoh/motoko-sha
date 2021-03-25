@@ -64,7 +64,7 @@ module {
 
     public func write(data : [Word8]) {
       var p = data;
-      len += Prim.natToWord64(p.size());
+      len +%= Prim.natToWord64(p.size());
       if (nx > 0) {
         let n = min(p.size(), 64 - nx);
         for (i in Iter.range(0, n - 1)) {
@@ -116,14 +116,14 @@ module {
       write(Array.freeze<Word8>(buf));
       buf := Array.init<Word8>(8, 0);
       for (i in Iter.range(0, 7)) {
-        let j : Word64 = 56 - 8 * Prim.natToWord64(i);
+        let j : Word64 = 56 -% 8 *% Prim.natToWord64(i);
         buf[i] := Prim.natToWord8(Prim.word64ToNat(n >> j));
       };
       write(Array.freeze<Word8>(buf));
       let hash = Array.init<Word8>(32, 0);
       for (i in Iter.range(0, 7)) {
         for (j in Iter.range(0, 3)) {
-          let k : Word32 = 24 - 8 * Prim.natToWord32(j);
+          let k : Word32 = 24 -% 8 *% Prim.natToWord32(j);
           hash[4 * i + j] := Prim.natToWord8(Prim.word32ToNat(s[i] >> k));
         };
       };
@@ -153,8 +153,8 @@ module {
           t1 := rot(v1, 17) ^ rot(v1, 19) ^ (v1 >> 10);
           t2 := rot(v2, 07) ^ rot(v2, 18) ^ (v2 >> 03);
           w[i] :=
-              t1 + w[i - 07] +
-              t2 + w[i - 16];
+              t1 +% w[i - 07] +%
+              t2 +% w[i - 16];
         };
         var a = s[0];
         var b = s[1];
@@ -166,26 +166,26 @@ module {
         var h = s[7];
         for (i in Iter.range(0, 63)) {
           t1 := rot(e, 06) ^ rot(e, 11) ^ rot(e, 25);
-          t1 += (e & f) ^ (^ e & g) + h + K[i] + w[i];
+          t1 +%= (e & f) ^ (^ e & g) +% h +% K[i] +% w[i];
           t2 := rot(a, 02) ^ rot(a, 13) ^ rot(a, 22);
-          t2 += (a & b) ^ (a & c) ^ (b & c);
+          t2 +%= (a & b) ^ (a & c) ^ (b & c);
           h := g;
           g := f;
           f := e;
-          e := d + t1;
+          e := d +% t1;
           d := c;
           c := b;
           b := a;
-          a := t1 + t2;
+          a := t1 +% t2;
         };
-        s[0] += a;
-        s[1] += b;
-        s[2] += c;
-        s[3] += d;
-        s[4] += e;
-        s[5] += f;
-        s[6] += g;
-        s[7] += h;
+        s[0] +%= a;
+        s[1] +%= b;
+        s[2] +%= c;
+        s[3] +%= d;
+        s[4] +%= e;
+        s[5] +%= f;
+        s[6] +%= g;
+        s[7] +%= h;
         p := Array.tabulate<Word8>(p.size() - 64, func (i) {
           return p[i + 64];
         });
@@ -203,7 +203,7 @@ module {
 
   private func rot(n : Word32, i : Word32) : Word32 {
     let j : Word32 = i % 32;
-    let k : Word32 = 32 - j;
+    let k : Word32 = 32 -% j;
     return n >> j | n << k;
   };
 };
