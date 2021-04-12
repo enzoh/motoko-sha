@@ -9,6 +9,7 @@
 
 import Array "mo:base/Array";
 import Iter "mo:base/Iter";
+import Nat "mo:base/Nat";
 import Nat8 "mo:base/Nat8";
 import Nat32 "mo:base/Nat32";
 import Nat64 "mo:base/Nat64";
@@ -68,7 +69,7 @@ module {
       var p = data;
       len +%= Nat64.fromIntWrap(p.size());
       if (nx > 0) {
-        let n = min(p.size(), 64 - nx);
+        let n = Nat.min(p.size(), 64 - nx);
         for (i in Iter.range(0, n - 1)) {
           x[nx + i] := p[i];
         };
@@ -195,17 +196,5 @@ module {
     };
   };
 
-  private func min(a : Nat, b : Nat) : Nat {
-    if (a < b) {
-      return a;
-    } else {
-      return b;
-    };
-  };
-
-  private func rot(n : Nat32, i : Nat32) : Nat32 {
-    let j : Nat32 = i % 32;
-    let k : Nat32 = 32 -% j;
-    return n >> j | n << k;
-  };
+  private let rot : (Nat32, Nat32) -> Nat32 = Nat32.bitrotRight;
 };
