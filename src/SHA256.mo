@@ -9,11 +9,14 @@
 
 import Array "mo:base/Array";
 import Iter "mo:base/Iter";
-import Prim "mo:prim";
+import Nat "mo:base/Nat";
+import Nat8 "mo:base/Nat8";
+import Nat32 "mo:base/Nat32";
+import Nat64 "mo:base/Nat64";
 
 module {
 
-  private let K : [Word32] = [
+  private let K : [Nat32] = [
     0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
     0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
     0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
@@ -32,13 +35,13 @@ module {
     0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
   ];
 
-  private let S : [Word32] = [
+  private let S : [Nat32] = [
     0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
     0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19,
   ];
 
   // Calculate a SHA256 hash.
-  public func sha256(data : [Word8]) : [Word8] {
+  public func sha256(data : [Nat8]) : [Nat8] {
     let digest = Digest();
     digest.write(data);
     return digest.sum();
@@ -46,13 +49,13 @@ module {
 
   public class Digest() {
 
-    private let s = Array.thaw<Word32>(S);
+    private let s = Array.thaw<Nat32>(S);
 
-    private let x = Array.init<Word8>(64, 0);
+    private let x = Array.init<Nat8>(64, 0);
 
     private var nx = 0;
 
-    private var len : Word64 = 0;
+    private var len : Nat64 = 0;
 
     public func reset() {
       for (i in Iter.range(0, 7)) {
@@ -62,31 +65,31 @@ module {
       len := 0;
     };
 
-    public func write(data : [Word8]) {
+    public func write(data : [Nat8]) {
       var p = data;
-      len +%= Prim.natToWord64(p.size());
+      len +%= Nat64.fromIntWrap(p.size());
       if (nx > 0) {
-        let n = min(p.size(), 64 - nx);
+        let n = Nat.min(p.size(), 64 - nx);
         for (i in Iter.range(0, n - 1)) {
           x[nx + i] := p[i];
         };
         nx += n;
         if (nx == 64) {
-          let buf = Array.freeze<Word8>(x);
+          let buf = Array.freeze<Nat8>(x);
           block(buf);
           nx := 0;
         };
-        p := Array.tabulate<Word8>(p.size() - n, func (i) {
+        p := Array.tabulate<Nat8>(p.size() - n, func (i) {
           return p[n + i];
         });
       };
       if (p.size() >= 64) {
-        let n = Prim.word64ToNat(Prim.natToWord64(p.size()) & (^ 63));
-        let buf = Array.tabulate<Word8>(n, func (i) {
+        let n = Nat64.toNat(Nat64.fromIntWrap(p.size()) & (^ 63));
+        let buf = Array.tabulate<Nat8>(n, func (i) {
           return p[i];
         });
         block(buf);
-        p := Array.tabulate<Word8>(p.size() - n, func (i) {
+        p := Array.tabulate<Nat8>(p.size() - n, func (i) {
           return p[n + i];
         });
       };
@@ -98,55 +101,55 @@ module {
       };
     };
 
-    public func sum() : [Word8] {
+    public func sum() : [Nat8] {
       var m = 0;
       var n = len;
-      var t = Prim.word64ToNat(n) % 64;
-      var buf : [var Word8] = [var];
+      var t = Nat64.toNat(n) % 64;
+      var buf : [var Nat8] = [var];
       if (56 > t) {
         m := 56 - t;
       } else {
         m := 120 - t;
       };
       n := n << 3;
-      buf := Array.init<Word8>(m, 0);
+      buf := Array.init<Nat8>(m, 0);
       if (m > 0) {
         buf[0] := 0x80;
       };
-      write(Array.freeze<Word8>(buf));
-      buf := Array.init<Word8>(8, 0);
+      write(Array.freeze<Nat8>(buf));
+      buf := Array.init<Nat8>(8, 0);
       for (i in Iter.range(0, 7)) {
-        let j : Word64 = 56 -% 8 *% Prim.natToWord64(i);
-        buf[i] := Prim.natToWord8(Prim.word64ToNat(n >> j));
+        let j : Nat64 = 56 -% 8 *% Nat64.fromIntWrap(i);
+        buf[i] := Nat8.fromIntWrap(Nat64.toNat(n >> j));
       };
-      write(Array.freeze<Word8>(buf));
-      let hash = Array.init<Word8>(32, 0);
+      write(Array.freeze<Nat8>(buf));
+      let hash = Array.init<Nat8>(32, 0);
       for (i in Iter.range(0, 7)) {
         for (j in Iter.range(0, 3)) {
-          let k : Word32 = 24 -% 8 *% Prim.natToWord32(j);
-          hash[4 * i + j] := Prim.natToWord8(Prim.word32ToNat(s[i] >> k));
+          let k : Nat32 = 24 -% 8 *% Nat32.fromIntWrap(j);
+          hash[4 * i + j] := Nat8.fromIntWrap(Nat32.toNat(s[i] >> k));
         };
       };
-      return Array.freeze<Word8>(hash);
+      return Array.freeze<Nat8>(hash);
     };
 
-    private func block(data : [Word8]) {
+    private func block(data : [Nat8]) {
       var p = data;
-      var w = Array.init<Word32>(64, 0);
+      var w = Array.init<Nat32>(64, 0);
       while (p.size() >= 64) {
         var j = 0;
         for (i in Iter.range(0, 15)) {
           j := i * 4;
           w[i] :=
-            Prim.natToWord32(Prim.word8ToNat(p[j + 0])) << 24 |
-            Prim.natToWord32(Prim.word8ToNat(p[j + 1])) << 16 |
-            Prim.natToWord32(Prim.word8ToNat(p[j + 2])) << 08 |
-            Prim.natToWord32(Prim.word8ToNat(p[j + 3])) << 00;
+            Nat32.fromIntWrap(Nat8.toNat(p[j + 0])) << 24 |
+            Nat32.fromIntWrap(Nat8.toNat(p[j + 1])) << 16 |
+            Nat32.fromIntWrap(Nat8.toNat(p[j + 2])) << 08 |
+            Nat32.fromIntWrap(Nat8.toNat(p[j + 3])) << 00;
         };
-        var v1 : Word32 = 0;
-        var v2 : Word32 = 0;
-        var t1 : Word32 = 0;
-        var t2 : Word32 = 0;
+        var v1 : Nat32 = 0;
+        var v2 : Nat32 = 0;
+        var t1 : Nat32 = 0;
+        var t2 : Nat32 = 0;
         for (i in Iter.range(16, 63)) {
           v1 := w[i - 02];
           v2 := w[i - 15];
@@ -186,24 +189,12 @@ module {
         s[5] +%= f;
         s[6] +%= g;
         s[7] +%= h;
-        p := Array.tabulate<Word8>(p.size() - 64, func (i) {
+        p := Array.tabulate<Nat8>(p.size() - 64, func (i) {
           return p[i + 64];
         });
       };
     };
   };
 
-  private func min(a : Nat, b : Nat) : Nat {
-    if (a < b) {
-      return a;
-    } else {
-      return b;
-    };
-  };
-
-  private func rot(n : Word32, i : Word32) : Word32 {
-    let j : Word32 = i % 32;
-    let k : Word32 = 32 -% j;
-    return n >> j | n << k;
-  };
+  private let rot : (Nat32, Nat32) -> Nat32 = Nat32.bitrotRight;
 };
