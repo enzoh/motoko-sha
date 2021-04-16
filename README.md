@@ -4,11 +4,6 @@
 
 This package implements secure hash algorithms for the Motoko programming language.
 
-### Prerequisites
-
-- [DFINITY SDK](https://sdk.dfinity.org/docs/download.html) v0.5.11
-- [Vessel](https://github.com/kritzcreek/vessel/releases/tag/v0.4.1) v0.4.1 (Optional)
-
 ### Usage
 
 Calculate a SHA256 hash.
