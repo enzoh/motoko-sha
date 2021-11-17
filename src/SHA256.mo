@@ -134,17 +134,18 @@ module {
     };
 
     private func block(data : [Nat8]) {
-      var p = data;
       var w = Array.init<Nat32>(64, 0);
-      while (p.size() >= 64) {
+      var start = 0;
+      var len = data.size();
+      while (len >= 64) {
         var j = 0;
         for (i in Iter.range(0, 15)) {
           j := i * 4;
           w[i] :=
-            Nat32.fromIntWrap(Nat8.toNat(p[j + 0])) << 24 |
-            Nat32.fromIntWrap(Nat8.toNat(p[j + 1])) << 16 |
-            Nat32.fromIntWrap(Nat8.toNat(p[j + 2])) << 08 |
-            Nat32.fromIntWrap(Nat8.toNat(p[j + 3])) << 00;
+            Nat32.fromIntWrap(Nat8.toNat(data[start + j + 0])) << 24 |
+            Nat32.fromIntWrap(Nat8.toNat(data[start + j + 1])) << 16 |
+            Nat32.fromIntWrap(Nat8.toNat(data[start + j + 2])) << 08 |
+            Nat32.fromIntWrap(Nat8.toNat(data[start + j + 3])) << 00;
         };
         var v1 : Nat32 = 0;
         var v2 : Nat32 = 0;
@@ -189,9 +190,8 @@ module {
         s[5] +%= f;
         s[6] +%= g;
         s[7] +%= h;
-        p := Array.tabulate<Nat8>(p.size() - 64, func (i) {
-          return p[i + 64];
-        });
+        start += 64;
+        len -= 64;
       };
     };
   };
