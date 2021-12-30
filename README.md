@@ -10,3 +10,8 @@ Calculate a SHA256 hash.
 ```motoko
 public func sha256(data : [Nat8]) : [Nat8]
 ```
+
+Calculate a SHA512 hash.
+```motoko
+public func sha512(data : [Nat8]) : [Nat8]
+```
